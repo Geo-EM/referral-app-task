@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: referral_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: referral_app
+      POSTGRES_PASSWORD: 1K2a3sW67JRt53KZ
+      POSTGRES_DB: referrals
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
