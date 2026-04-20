@@ -8,10 +8,7 @@ export const referralRouter = createTRPCRouter({
     .input(referralSchema)
     .mutation(async ({ input }) => {
       try {
-        const [result] = await db
-          .insert(referrals)
-          .values(input)
-          .returning();
+        const [result] = await db.insert(referrals).values(input).returning();
 
         return {
           id: result.id,
@@ -19,12 +16,17 @@ export const referralRouter = createTRPCRouter({
           followUp: "Our team will contact within 24 hours",
         };
       } catch (e) {
-        console.error(e);
+        console.error("submitReferral", e);
         throw new Error("Database error");
       }
     }),
 
   getReferrals: publicProcedure.query(async () => {
-    return await db.select().from(referrals);
+    try {
+      return await db.select().from(referrals);
+    } catch (e) {
+      console.error("getReferrals", e);
+      throw new Error("Database error");
+    }
   }),
 });

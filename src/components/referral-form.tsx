@@ -30,19 +30,37 @@ export default function ReferralForm() {
 
         <Link
           href={"/admin"}
-          className="cursor-pointer border-gray-600 text-gray-800 border text-sm rounded-lg px-1 py-0.5 hover:opacity-70 transition-opacity"
+          className="bg-black transition-all text-white p-1 px-2 rounded-md font-medium hover:opacity-90 disabled:opacity-50 text-sm"
         >
           Check List
         </Link>
       </div>
-      <div className="bg-white shadow-sm border rounded-2xl p-6">
+      <div className="bg-white shadow-2xl drop-shadow-2xl border-2 rounded-2xl p-6">
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-8 text-black"
         >
           {/* Patient Info */}
           <section>
-            <h2 className="text-lg font-semibold mb-4">Patient Information</h2>
+            {/* Feedback */}
+            {mutation.isSuccess && (
+              <div className="bg-green-50 text-green-700 p-3 rounded-lg text-sm">
+                <p className="text-base mb-1 font-medium">
+                  Our team will contact the patient within 24 hours
+                </p>
+                <p>
+                  {mutation.data.message} — ID: {mutation.data.id}
+                </p>
+              </div>
+            )}
+
+            {mutation.isError && (
+              <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm">
+                Failed to submit referral. Please try again.
+              </div>
+            )}
+
+            <h2 className="text-lg font-semibold my-4">Patient Information</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Field
@@ -56,15 +74,15 @@ export default function ReferralForm() {
                 <input {...register("patientLastName")} />
               </Field>
 
-              <Field label="Date of Birth">
+              <Field label="Date of Birth" error={errors.dob?.message}>
                 <input type="date" {...register("dob")} />
               </Field>
 
-              <Field label="Phone">
+              <Field label="Phone" error={errors.phone?.message}>
                 <input {...register("phone")} />
               </Field>
 
-              <Field label="Email (optional)">
+              <Field label="Email (optional)" error={errors.email?.message}>
                 <input {...register("email")} />
               </Field>
             </div>
@@ -75,19 +93,25 @@ export default function ReferralForm() {
             <h2 className="text-lg font-semibold mb-4">Referring Attorney</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Field label="Law Firm">
+              <Field label="Law Firm" error={errors.lawFirm?.message}>
                 <input {...register("lawFirm")} />
               </Field>
 
-              <Field label="Attorney Name">
+              <Field label="Attorney Name" error={errors.attorneyName?.message}>
                 <input {...register("attorneyName")} />
               </Field>
 
-              <Field label="Attorney Email">
+              <Field
+                label="Attorney Email"
+                error={errors.attorneyEmail?.message}
+              >
                 <input {...register("attorneyEmail")} />
               </Field>
 
-              <Field label="Attorney Phone">
+              <Field
+                label="Attorney Phone"
+                error={errors.attorneyPhone?.message}
+              >
                 <input {...register("attorneyPhone")} />
               </Field>
             </div>
@@ -97,7 +121,7 @@ export default function ReferralForm() {
           <section className="space-y-4">
             <h2 className="text-lg font-semibold mb-4">Referral Details</h2>
 
-            <Field label="Primary Complaint">
+            <Field label="Primary Complaint" error={errors.complaint?.message}>
               <textarea
                 className="w-full"
                 rows={4}
@@ -106,7 +130,10 @@ export default function ReferralForm() {
             </Field>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Field label="Preferred Location">
+              <Field
+                label="Preferred Location"
+                error={errors.location?.message}
+              >
                 <select className="w-full" {...register("location")}>
                   <option value="">Select location</option>
                   <option value="Anaheim">Anaheim</option>
@@ -118,8 +145,11 @@ export default function ReferralForm() {
                 </select>
               </Field>
 
-              <Field label="Appointment Type">
-                <div className="flex  w-full gap-4">
+              <Field
+                label="Appointment Type"
+                error={errors.appointmentType?.message}
+              >
+                <div className="flex py-[1px] w-full gap-4">
                   <Radio
                     label="In Person"
                     value="in_person"
@@ -140,7 +170,7 @@ export default function ReferralForm() {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="w-full bg-black text-white py-3 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
+              className="w-full bg-black transition-all text-white py-3 rounded-lg font-medium hover:opacity-90 disabled:opacity-50"
             >
               {mutation.isPending ? "Submitting..." : "Submit Referral"}
             </button>
@@ -149,7 +179,12 @@ export default function ReferralForm() {
           {/* Feedback */}
           {mutation.isSuccess && (
             <div className="bg-green-50 text-green-700 p-3 rounded-lg text-sm">
-              {mutation.data.message} — ID: {mutation.data.id}
+              <p className="text-base mb-1 font-medium">
+                Our team will contact the patient within 24 hours
+              </p>
+              <p>
+                {mutation.data.message} — ID: {mutation.data.id}
+              </p>
             </div>
           )}
 
@@ -181,7 +216,7 @@ function Field({
       <div className="border rounded-lg px-3 py-2 focus-within:ring-2 focus-within:ring-black">
         {children}
       </div>
-      {error && <span className="text-xs text-red-600">{error}</span>}
+      {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
   );
 }

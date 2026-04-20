@@ -2,29 +2,43 @@ import { z } from "zod";
 
 export const referralSchema = z.object({
   patientFirstName: z.string().min(1, "First name is required"),
-  patientLastName: z.string().min(1),
-  dob: z.string(),
+  patientLastName: z.string().min(1, "Last name is required"),
 
-  phone: z.string().min(8),
-  email: z.email().optional(),
+  dob: z.string().min(1, "Date of birth is required"),
 
-  lawFirm: z.string().min(1),
-  attorneyName: z.string().min(1),
-  attorneyEmail: z.email(),
-  attorneyPhone: z.string(),
+  phone: z.string().min(8, "Phone number must be at least 8 digits"),
 
-  complaint: z.string().max(500),
+  email: z.string().email("Invalid email address").optional(),
 
-  location: z.enum([
-    "Anaheim",
-    "Culver City",
-    "Downey",
-    "El Monte",
-    "Long Beach",
-    "Los Angeles",
-  ]),
+  lawFirm: z.string().min(1, "Law firm is required"),
+  attorneyName: z.string().min(1, "Attorney name is required"),
 
-  appointmentType: z.enum(["in_person", "telemedicine"]),
+  attorneyEmail: z.string().email("Invalid attorney email"),
+
+  attorneyPhone: z.string().min(8, "Attorney phone must be at least 8 digits"),
+
+  complaint: z
+    .string()
+    .max(500, "Complaint must be under 500 characters")
+    .min(1, "Complaint is required"),
+
+  location: z.enum(
+    [
+      "Anaheim",
+      "Culver City",
+      "Downey",
+      "El Monte",
+      "Long Beach",
+      "Los Angeles",
+    ],
+    {
+      message: "Please select a location",
+    },
+  ),
+
+  appointmentType: z.enum(["in_person", "telemedicine"], {
+    message: "Please select appointment type",
+  }),
 });
 
 export type ReferralInput = z.infer<typeof referralSchema>;

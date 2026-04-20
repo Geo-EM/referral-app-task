@@ -38,7 +38,11 @@ export default function AdminPage() {
   }
 
   if (isError) {
-    return <div className="p-6 text-red-600">Failed to load referrals.</div>;
+    return (
+      <div className="p-6 text-red-600 mt-24 mx-auto">
+        Failed to load referrals.
+      </div>
+    );
   }
 
   return (
@@ -46,7 +50,7 @@ export default function AdminPage() {
       {/* Header */}
       <div className="flex items-center gap-3">
         <div
-          onClick={() => router.push("/referral")}
+          onClick={() => router.push("/")}
           role="button"
           className="border-2 -mb-1 cursor-pointer hover:opacity-70 transition-opacity rounded-full"
         >
@@ -135,7 +139,7 @@ export default function AdminPage() {
   );
 }
 
-/* ---------------- Status Badge ---------------- */
+// Status Badge
 
 function StatusBadge({ status }: { status: string }) {
   const base = "px-2 py-1 rounded-full text-xs font-medium";
